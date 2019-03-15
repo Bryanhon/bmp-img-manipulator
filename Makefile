@@ -2,7 +2,7 @@ OBJECTS          = main.o helper.o
 CC               = gcc
 
 all: $(OBJECTS)
-	$(CC) -Og -g -I . -L . -lm $? -o a.out
+	$(CC) -Og -g -I . -L . -lm $? -o bmp
 
 main.o: main.c helper.h
 	$(CC) -c -Og -g main.c
@@ -13,4 +13,4 @@ helper.o: helper.c
 .PHONY: clean
 clean:
 	rm *.o
-	rm a.out
+	rm bmp
