@@ -4,7 +4,7 @@
  **************************************************************************************************************************
  * Books:                                                                                                                 *
  *  - https://www.bol.com/nl/f/c-programming-language/9200000010082279/?country=BE                                        *
- *                                                                                                                        * 
+ *                                                                                                                        *
  * Sites:                                                                                                                 *
  *  - http://getoptgenerator.dafuer.es                                                                                    *
  *  - https://linux.die.net/man/3/getopt_long                                                                             *
@@ -28,7 +28,7 @@ main(int argc, char *argv[])
         help();
         exit(EXIT_SUCCESS);
     }
-    
+
     const struct option long_options[] = {
         { "help",       0, NULL, 'h' },
         { "verbose",    0, NULL, 'v' },
@@ -39,7 +39,7 @@ main(int argc, char *argv[])
         { NULL,         0, NULL, 0 }
     };
     const char *short_options = "hvir:o:f:";
-    
+
     bool verbose          = false;
     int32_t rotation      = 0;
     uint8_t filter        = 0;
@@ -51,15 +51,15 @@ main(int argc, char *argv[])
 
     bmpFileHeader_t bmpFH;
     bmpInfoHeader_t bmpIH;
-    
+
     // parse options
     while (1) {
         // obtain a option
         next_option = getopt_long(argc, argv, short_options, long_options, NULL);
- 
+
         if (next_option == -1)
             break; // no more options. Break loop
- 
+
         switch (next_option) {
                    case 'h':    help();
                                 exit(EXIT_SUCCESS);
@@ -74,11 +74,11 @@ main(int argc, char *argv[])
             break; default:     exit(EXIT_FAILURE);
         }
     }
-    
+
     // load in the .bmp file
     bmpData = loadBmp(argv[optind], &bmpFH, &bmpIH);
     rotate(&bmpFH, &bmpIH, bmpData, 0);
-    
+
 #ifdef _DEBUG
     if (verbose) {
         printf("System endianness == %s\n", (endian ? "little endian" : "big endian"));
@@ -89,24 +89,24 @@ main(int argc, char *argv[])
 
     // if the invert flag is set invert the image
     if (invert) bmpData = reverseBmp(bmpData, bmpIH.SizeImage);
-    
+
     // if there is a filter pressent apply it
     if (filter) bmpData = applyFilter(bmpData, bmpIH.SizeImage, filter);
-    
+
     // if the outputfile hasn't been declared take on default name of "output.bmp"
     if (outputfile != NULL)
         saveBmp((char *)outputfile, &bmpFH, &bmpIH, bmpData);
     else
         saveBmp("output.bmp", &bmpFH, &bmpIH, bmpData);
-    
+
 #ifdef _DEBUG
     if (verbose) {
         printf(".bmp file after editing:\n");
         bmpDump(&bmpFH, &bmpIH, bmpData);
     }
 #endif
-    
+
     free(bmpData);
-    
+
     return 0;
 }
